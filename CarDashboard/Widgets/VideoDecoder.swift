@@ -5,6 +5,11 @@ import SwiftUI
 final class VideoDecoder: ObservableObject {
     @Published private(set) var currentFrame: CGImage?
 
+    /// Plain diagnostic counter (read from the mirroring tile's poll timer): how many frames
+    /// the decoder has actually produced. Distinguishes "packets arriving but not decoding"
+    /// from "decoding fine".
+    private(set) var decodedFrameCount = 0
+
     private var decompressionSession: VTDecompressionSession?
     private var formatDescription: CMVideoFormatDescription?
     private let decodeQueue = DispatchQueue(label: "com.cardashboard.videodecoder")
@@ -148,6 +153,7 @@ final class VideoDecoder: ObservableObject {
         DispatchQueue.main.async { [weak self] in
             self?.currentFrame = cgImage
             self?.lastFrameTime = Date()
+            self?.decodedFrameCount += 1
         }
     }
 }

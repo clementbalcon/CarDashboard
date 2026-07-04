@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 
 struct HourlyForecast: Identifiable {
@@ -28,24 +29,35 @@ func weatherSymbolName(for code: Int, isDay: Bool) -> String {
     }
 }
 
-/// Fetches weather from Open-Meteo for coordinates supplied from outside (the iPhone's
-/// relayed GPS position). The iPad no longer has any location responsibility of its own.
+/// Fetches weather from Open-Meteo. Coordinates come from whichever source is available:
+/// the iPhone's relayed GPS (fed in via `update`), or — as a fallback so weather works even
+/// if the relay is silent — the iPad's own CoreLocation. Both feed the same fetch path.
 @MainActor
-final class WeatherObserver: ObservableObject {
+final class WeatherObserver: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published private(set) var current: CurrentWeather?
     @Published private(set) var upcomingHours: [HourlyForecast] = []
     @Published private(set) var errorMessage: String?
 
     private var lastCoordinate: (latitude: Double, longitude: Double)?
     private var refreshTimer: Timer?
+    private let locationManager = CLLocationManager()
 
-    init() {
-        // Re-fetch periodically for the last known position so the forecast stays fresh
-        // even when the car isn't moving and no new location arrives.
+    override init() {
+        super.init()
+
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.requestWhenInUseAuthorization()
+
+        // Re-fetch periodically for the last known position, and re-poll the iPad's own
+        // location, so the forecast stays fresh even when parked and no relay arrives.
         refreshTimer = Timer.scheduledTimer(withTimeInterval: 1800, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                guard let self, let coordinate = self.lastCoordinate else { return }
-                await self.fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                guard let self else { return }
+                self.locationManager.requestLocation()
+                if let coordinate = self.lastCoordinate {
+                    await self.fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                }
             }
         }
     }
@@ -53,6 +65,23 @@ final class WeatherObserver: ObservableObject {
     deinit {
         refreshTimer?.invalidate()
     }
+
+    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        Task { @MainActor in
+            if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+                manager.requestLocation()
+            }
+        }
+    }
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let coordinate = locations.last?.coordinate else { return }
+        Task { @MainActor in
+            self.update(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        }
+    }
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {}
 
     /// Called whenever the iPhone reports a new position. Skips the network round-trip if
     /// the position hasn't meaningfully moved since the last successful fetch.

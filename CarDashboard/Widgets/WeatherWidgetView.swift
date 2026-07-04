@@ -14,11 +14,12 @@ struct WeatherWidgetView: DashboardWidget {
             } else if let errorMessage = weather.errorMessage {
                 Text(errorMessage)
                     .foregroundStyle(.tertiary)
-            } else if connection.deviceLocation == nil {
-                Text("En attente de la position de l'iPhone…")
-                    .foregroundStyle(.tertiary)
             } else {
-                ProgressView()
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Localisation en cours…")
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
         .onAppear {

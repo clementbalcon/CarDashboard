@@ -36,6 +36,8 @@
 	</array>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>CarDashboard affiche et contrôle la lecture Apple Music en cours.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>CarDashboard utilise ta position (à défaut de celle de l'iPhone) pour afficher la météo locale.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>CarDashboard se connecte à ton iPhone en Wi-Fi local pour recevoir le mirroring Waze et le niveau de batterie.</string>
 	<key>NSBonjourServices</key>

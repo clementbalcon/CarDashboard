@@ -20,6 +20,7 @@ L'iPad est fixé au tableau de bord, l'iPhone reste dans son support avec Waze o
 - 📞 **Appels rapides** — contacts favoris configurables, appel en un tap
 - 🔋 **Batterie iPhone** — niveau affiché en continu sur l'iPad
 - 🔄 **Layout adaptatif** — bascule automatique portrait/paysage, zone Waze dimensionnée au ratio exact de l'iPhone
+- 🩺 **Écran de diagnostic** — au démarrage, un panneau montre en direct l'état de la liaison (connexion, batterie, position, config vidéo, paquets reçus) des deux côtés, puis entre automatiquement dans le dashboard une fois la liaison établie
 
 ## Architecture
 
@@ -33,6 +34,8 @@ Shared/                  Transport Multipeer Connectivity + protocole de message
 ```
 
 **Transport** : [Multipeer Connectivity](https://developer.apple.com/documentation/multipeerconnectivity) — découverte automatique via Bonjour, pas de serveur, fonctionne sur le réseau local du hotspot. Un seul canal transporte la vidéo et les messages de données (batterie, position GPS, config décodeur).
+
+**Robustesse de la liaison** : l'iPad ne maintient qu'une connexion à la fois avec l'iPhone, alors que celui-ci expose deux pairs (l'app companion et l'extension broadcast). Le pair vidéo est donc prioritaire : lancer le broadcast bascule la connexion sur l'extension (qui relaie aussi la batterie), et l'arrêter la ramène sur le companion. Un heartbeat + watchdog détectent les sessions mortes et relancent la découverte automatiquement ; la position GPS de l'iPad sert de repli météo quand celle de l'iPhone n'est pas disponible.
 
 **Pipeline vidéo** : capture ReplayKit → encodage H.264 temps réel (VideoToolbox, limite mémoire de 50 Mo de l'extension oblige) → envoi hybride (keyframes en fiable, inter-frames en non-fiable pour éviter le head-of-line blocking) → décodage VTDecompressionSession côté iPad.
 

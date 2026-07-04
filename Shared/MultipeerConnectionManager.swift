@@ -22,6 +22,16 @@ struct DeviceLocation: Equatable {
 final class MultipeerConnectionManager: NSObject, ObservableObject {
     static let serviceType = "cardashboard"
 
+    /// How long the browser tolerates silence on a "connected" session before deciding it's
+    /// a zombie and forcing a fresh reconnect. Kept a few heartbeats wide to avoid flapping.
+    private static let livenessTimeout: TimeInterval = 12
+    /// How long to let discovery run without any connection before assuming the browser is
+    /// wedged. Wide enough that the normal connect handshake is never interrupted.
+    private static let searchGrace: TimeInterval = 20
+    /// Minimum gap between two discovery restarts, so bursts of disconnect events (or a
+    /// watchdog firing next to a delegate callback) don't thrash the radio.
+    private static let restartDebounce: TimeInterval = 6
+
     enum ConnectionState {
         case idle
         case searching
@@ -43,6 +53,12 @@ final class MultipeerConnectionManager: NSObject, ObservableObject {
     /// (often Wi-Fi-only in the car) uses this instead of its own location for weather.
     @Published private(set) var deviceLocation: DeviceLocation?
 
+    /// Plain diagnostics for the startup screen (read from the main thread, written from the
+    /// network thread — racy on purpose, exact counts don't matter for a status display).
+    private(set) var videoConfigReceived = false
+    private(set) var videoPacketsReceived = 0
+    private(set) var heartbeatsReceived = 0
+
     /// Bypasses @Published on purpose: video frames can arrive up to 30x/sec and a decoder
     /// consumes them directly, so routing them through SwiftUI diffing would be wasteful.
     var onVideoFrame: ((Data) -> Void)?
@@ -53,7 +69,7 @@ final class MultipeerConnectionManager: NSObject, ObservableObject {
     var onVideoConfig: ((_ sps: Data, _ pps: Data) -> Void)?
 
     private let role: PeerRole
-    private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
+    private let myPeerID: MCPeerID
     private lazy var session: MCSession = {
         let session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .none)
         session.delegate = self
@@ -63,31 +79,52 @@ final class MultipeerConnectionManager: NSObject, ObservableObject {
     private var advertiser: MCNearbyServiceAdvertiser?
     private var browser: MCNearbyServiceBrowser?
 
-    init(role: PeerRole) {
+    /// Display-name suffix marking the broadcast extension's peer (the video source). When
+    /// present, the iPad prefers it over the companion — the device pair holds only one link.
+    private static let extensionMarker = "écran"
+
+    private var isRunning = false
+    private var lastReceivedAt = Date()
+    private var lastRestartAt = Date.distantPast
+    private var watchdogTimer: Timer?
+    private var knownPeers: Set<MCPeerID> = []
+
+    /// `displaySuffix` distinguishes peers that share a device. The companion app and the
+    /// broadcast extension both advertise from the same iPhone; without distinct display
+    /// names the iPad's browser can fail to tell them apart and connect to only one — which
+    /// is exactly why battery (companion) can work while video (extension) never arrives.
+    init(role: PeerRole, displaySuffix: String? = nil) {
         self.role = role
+        let base = UIDevice.current.name
+        let name = displaySuffix.map { "\(base) · \($0)" } ?? base
+        self.myPeerID = MCPeerID(displayName: String(name.prefix(63)))
         super.init()
     }
 
     func start() {
-        guard case .idle = connectionState else { return }
+        guard !isRunning else { return }
+        isRunning = true
         connectionState = .searching
-        switch role {
-        case .advertiser:
-            let advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: Self.serviceType)
-            advertiser.delegate = self
-            advertiser.startAdvertisingPeer()
-            self.advertiser = advertiser
-        case .browser:
-            let browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: Self.serviceType)
-            browser.delegate = self
-            browser.startBrowsingForPeers()
-            self.browser = browser
+        startDiscovery()
+
+        // Only the browser (iPad) watches liveness: the advertisers mostly send and would
+        // otherwise flag their own — legitimately quiet — receive side as dead.
+        if role == .browser {
+            lastReceivedAt = Date()
+            watchdogTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
+                self?.checkLiveness()
+            }
         }
     }
 
     func stop() {
+        isRunning = false
+        watchdogTimer?.invalidate()
+        watchdogTimer = nil
         advertiser?.stopAdvertisingPeer()
         browser?.stopBrowsingForPeers()
+        advertiser = nil
+        browser = nil
         session.disconnect()
         connectionState = .idle
     }
@@ -120,23 +157,104 @@ final class MultipeerConnectionManager: NSObject, ObservableObject {
             print("MultipeerConnectionManager sendVideoFrame error: \(error)")
         }
     }
+
+    // MARK: - Discovery lifecycle
+
+    private func startDiscovery() {
+        switch role {
+        case .advertiser:
+            let advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: Self.serviceType)
+            advertiser.delegate = self
+            advertiser.startAdvertisingPeer()
+            self.advertiser = advertiser
+        case .browser:
+            let browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: Self.serviceType)
+            browser.delegate = self
+            browser.startBrowsingForPeers()
+            self.browser = browser
+        }
+    }
+
+    /// Tear down and recreate the advertiser/browser. MCNearbyService objects can get wedged
+    /// after a drop and stop (re)discovering peers; recreating them forces a clean restart.
+    ///
+    /// Deliberately only driven by the watchdog, never reactively from a connection-state
+    /// callback: recreating discovery objects *during* the connect handshake aborts it, and
+    /// the iPhone exposes two same-named peers (companion app + broadcast extension) whose
+    /// handshakes overlap — tearing down mid-flight leaves a connected-but-dead session.
+    private func restartDiscovery() {
+        guard isRunning else { return }
+        guard Date().timeIntervalSince(lastRestartAt) > Self.restartDebounce else { return }
+        lastRestartAt = Date()
+        advertiser?.stopAdvertisingPeer()
+        browser?.stopBrowsingForPeers()
+        advertiser = nil
+        browser = nil
+        knownPeers.removeAll()
+        startDiscovery()
+    }
+
+    /// The iPad keeps only one connection to the iPhone at a time, so pick the best peer: the
+    /// broadcast extension (video) when it's available, otherwise the companion (battery/GPS).
+    /// Switching requires dropping the current link first — the device pair won't hold two.
+    private func connectToBest() {
+        guard isRunning, let browser else { return }
+        let ext = knownPeers.first { $0.displayName.hasSuffix(Self.extensionMarker) }
+        let companion = knownPeers.first { !$0.displayName.hasSuffix(Self.extensionMarker) }
+        guard let target = ext ?? companion else { return }
+        if session.connectedPeers.contains(target) { return }
+
+        if session.connectedPeers.isEmpty {
+            browser.invitePeer(target, to: session, withContext: nil, timeout: 10)
+        } else {
+            // The wrong peer is connected (e.g. companion, while the extension just appeared).
+            // Drop it, then invite the target once the transport has freed up.
+            session.disconnect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                guard let self, self.isRunning, let browser = self.browser else { return }
+                if !self.session.connectedPeers.contains(target), self.knownPeers.contains(target) {
+                    browser.invitePeer(target, to: self.session, withContext: nil, timeout: 10)
+                }
+            }
+        }
+    }
+
+    private func checkLiveness() {
+        guard isRunning else { return }
+        let idleFor = Date().timeIntervalSince(lastReceivedAt)
+        if !session.connectedPeers.isEmpty {
+            // Connected on paper but silent too long → zombie session. Drop it and rebuild.
+            if idleFor > Self.livenessTimeout {
+                session.disconnect()
+                connectionState = .searching
+                restartDiscovery()
+            }
+        } else if idleFor > Self.searchGrace {
+            // Not connected and discovery has been fruitless for a while → browser may be
+            // wedged. The grace window leaves the initial handshake undisturbed.
+            restartDiscovery()
+        }
+    }
 }
 
 extension MultipeerConnectionManager: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         DispatchQueue.main.async {
-            switch state {
-            case .connected:
-                self.connectionState = .connected(peerName: peerID.displayName)
-            case .connecting, .notConnected:
+            if let peer = session.connectedPeers.first {
+                self.connectionState = .connected(peerName: peer.displayName)
+                self.lastReceivedAt = Date() // fresh grace period on (re)connect
+            } else if self.isRunning {
+                // Stay searching. Discovery keeps running; the watchdog rebuilds it only if
+                // this drags on — never here, mid-handshake, where it would abort the connect.
                 self.connectionState = .searching
-            @unknown default:
-                break
+            } else {
+                self.connectionState = .idle
             }
         }
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        lastReceivedAt = Date()
         guard let tagByte = data.first, let tag = PacketTag(rawValue: tagByte) else { return }
         let payload = data.dropFirst()
 
@@ -153,9 +271,13 @@ extension MultipeerConnectionManager: MCSessionDelegate {
                     self.deviceLocation = DeviceLocation(latitude: latitude, longitude: longitude)
                 }
             case .videoConfig(let sps, let pps):
+                videoConfigReceived = true
                 onVideoConfig?(sps, pps)
+            case .heartbeat:
+                heartbeatsReceived += 1 // its main job is to bump lastReceivedAt, done above
             }
         case .videoFrame:
+            videoPacketsReceived += 1
             onVideoFrame?(Data(payload))
         }
     }
@@ -169,18 +291,31 @@ extension MultipeerConnectionManager: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         invitationHandler(true, session)
     }
+
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+        print("MultipeerConnectionManager advertising error: \(error)")
+    }
 }
 
 extension MultipeerConnectionManager: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
-        browser.invitePeer(peerID, to: session, withContext: nil, timeout: 10)
+        DispatchQueue.main.async {
+            self.knownPeers.insert(peerID)
+            self.connectToBest()
+        }
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         DispatchQueue.main.async {
-            if case .connected(let name) = self.connectionState, name == peerID.displayName {
+            self.knownPeers.remove(peerID)
+            self.connectToBest() // e.g. broadcast stopped → fall back to the companion
+            if self.session.connectedPeers.isEmpty, self.isRunning {
                 self.connectionState = .searching
             }
         }
+    }
+
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
+        print("MultipeerConnectionManager browsing error: \(error)")
     }
 }

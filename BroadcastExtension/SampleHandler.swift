@@ -2,23 +2,16 @@ import ReplayKit
 import VideoToolbox
 
 final class SampleHandler: RPBroadcastSampleHandler {
-    private let connection = MultipeerConnectionManager(role: .advertiser)
+    private let connection = MultipeerConnectionManager(role: .advertiser, displaySuffix: "écran")
     private var compressionSession: VTCompressionSession?
-    private var batteryTimer: Timer?
+    private var lastBatterySentAt = Date.distantPast
 
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
         connection.start()
-
         UIDevice.current.isBatteryMonitoringEnabled = true
-        batteryTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in
-            self?.sendBatteryStatus()
-        }
-        sendBatteryStatus()
     }
 
     override func broadcastFinished() {
-        batteryTimer?.invalidate()
-        batteryTimer = nil
         if let compressionSession {
             VTCompressionSessionInvalidate(compressionSession)
         }
@@ -29,6 +22,16 @@ final class SampleHandler: RPBroadcastSampleHandler {
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
         guard sampleBufferType == .video else { return }
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+
+        // The iPad only holds one Multipeer connection to the iPhone at a time, so while the
+        // broadcast is running the extension — not the companion app — is the live channel.
+        // Piggyback the battery send on the video callback: it's guaranteed to run (unlike a
+        // Timer, which needs a run loop the extension doesn't reliably provide) and only fires
+        // once the connection is actually up.
+        if Date().timeIntervalSince(lastBatterySentAt) > 10 {
+            lastBatterySentAt = Date()
+            sendBatteryStatus()
+        }
 
         if compressionSession == nil {
             setUpCompressionSession(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))

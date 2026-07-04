@@ -19,6 +19,8 @@ struct CompanionView: View {
 
             Spacer()
 
+            diagnosticPanel
+
             VStack(spacing: 16) {
                 broadcastButton
                 wazeButton
@@ -34,6 +36,36 @@ struct CompanionView: View {
             Spacer()
         }
         .padding()
+    }
+
+    private var diagnosticPanel: some View {
+        VStack(spacing: 0) {
+            diagRow("Liaison iPad", isConnected ? .green : .orange, isConnected ? "connecté" : "recherche…")
+            Divider()
+            diagRow("Autorisation GPS", reporter.locationAuthorized ? .green : .red,
+                    reporter.locationAuthorized ? "accordée" : "non accordée")
+            Divider()
+            diagRow("Position GPS", reporter.lastLocationSentAt != nil ? .green : .orange,
+                    reporter.lastLocationSentAt != nil ? "envoyée" : "en attente d'un point")
+            Divider()
+            diagRow("Batterie", reporter.lastBatterySentAt != nil ? .green : .orange,
+                    reporter.lastBatterySentAt != nil ? "envoyée" : "en attente")
+            Divider()
+            diagRow("Heartbeats", reporter.heartbeatsSent > 0 ? .green : .orange, "\(reporter.heartbeatsSent) envoyés")
+        }
+        .padding(.horizontal, 16).padding(.vertical, 4)
+        .background(Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .padding(.horizontal, 24)
+    }
+
+    private func diagRow(_ title: String, _ color: Color, _ detail: String) -> some View {
+        HStack(spacing: 12) {
+            Circle().fill(color).frame(width: 11, height: 11)
+            Text(title).font(.subheadline)
+            Spacer()
+            Text(detail).font(.subheadline).foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 10)
     }
 
     private var isConnected: Bool {
