@@ -1,0 +1,614 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2223F16F17634B348D1D63EF /* ContactsWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E4EB6CCDB7451FAB537618 /* ContactsWidgetView.swift */; };
+		2EF05AC9EE444D3E9BDF78D4 /* MusicWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E661FDAD284B33BE054C20 /* MusicWidgetView.swift */; };
+		36644FE92F95411F9A9AAD42 /* MusicPlayerObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0A1E70E8447B58531B621 /* MusicPlayerObserver.swift */; };
+		57774F0E4E3F4878B8E62C85 /* WeatherWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE98A8C3A424E0BB67E0D5B /* WeatherWidgetView.swift */; };
+		E51CAC0954E3401A9D5FF771 /* WeatherObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A978FC15288F484C8ECCFD1D /* WeatherObserver.swift */; };
+		8A06CA5246ED46EAB4AF4B82 /* FavoriteContactsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98E32F1E48E40D0AD3EA001 /* FavoriteContactsStore.swift */; };
+		C8BD092B219445D6B6FDD6C2 /* MirroringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCA320AC4705414EA7F2CFA2 /* MirroringView.swift */; };
+		56FBFEAABE8A40B09978C082 /* VideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9FA427FBF1466BB9AD8D00 /* VideoDecoder.swift */; };
+		AADFA096AD3847BEB9264568 /* SampleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D00B7DD5374B72A1FCE1DB /* SampleHandler.swift */; };
+		A04719B140FB44EFA1EC5D2E /* MultipeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142D08C76DE49F1B1E7CC65 /* MultipeerConnectionManager.swift */; };
+		EEA32EB5EC3C4C2A8B923A75 /* DashboardMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C44BB716F0A431BB5F1811F /* DashboardMessage.swift */; };
+		D86F17C8F2A74AE5B1E3C302 /* BroadcastExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 66C119619A0744AB8F34BD52 /* BroadcastExtension.appex */; settings = {ATTRIBUTES = (RemoveHeaderOnCopy, ); }; };
+		CA44510560134642ABA67085 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1826DE8663C430D8E687409 /* DashboardView.swift */; };
+		D19EA0B03D524EAA8DF5954B /* DashboardWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614922D4BC0D45E7A39AE4FB /* DashboardWidget.swift */; };
+		D89DA12F4EBA499B9A212FDB /* CarDashboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A5D308D754437F96F4BBE2 /* CarDashboardApp.swift */; };
+		EFAD586A52F94441B53CB3DD /* BatteryIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682A70A4724F451D9FF94B8F /* BatteryIndicatorView.swift */; };
+		F24A014D392B4965BC882E66 /* DashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931822DA44B4439AA0061288 /* DashboardLayout.swift */; };
+		06943D4CB709448AAA2B8048 /* MultipeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142D08C76DE49F1B1E7CC65 /* MultipeerConnectionManager.swift */; };
+		40F48CEF823D47578BCBF588 /* MultipeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A142D08C76DE49F1B1E7CC65 /* MultipeerConnectionManager.swift */; };
+		AD24271F07194644A2E3FCC2 /* DashboardMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C44BB716F0A431BB5F1811F /* DashboardMessage.swift */; };
+		2F6AC2692123444895C2DED9 /* DashboardMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C44BB716F0A431BB5F1811F /* DashboardMessage.swift */; };
+		A29C8F34F5824E068F229DA0 /* CarDashboardCompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB977C97FD454D97B91F43 /* CarDashboardCompanionApp.swift */; };
+		53837A280EA945BBA68827D2 /* CompanionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F044C661A6D0484799365FEB /* CompanionView.swift */; };
+		A1033A71062B4BD889556540 /* BatteryReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731CEB8165044E00A4EDC3B1 /* BatteryReporter.swift */; };
+		A1CDA55E75000000000B0001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1CDA55E75000000000A0001 /* Assets.xcassets */; };
+		A1CDA55E75000000000B0002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1CDA55E75000000000A0002 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0CE98A8C3A424E0BB67E0D5B /* WeatherWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetView.swift; sourceTree = "<group>"; };
+		24E4EB6CCDB7451FAB537618 /* ContactsWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsWidgetView.swift; sourceTree = "<group>"; };
+		A978FC15288F484C8ECCFD1D /* WeatherObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherObserver.swift; sourceTree = "<group>"; };
+		C98E32F1E48E40D0AD3EA001 /* FavoriteContactsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteContactsStore.swift; sourceTree = "<group>"; };
+		25B2878C7FA14B08B75D8828 /* CarDashboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDashboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		614922D4BC0D45E7A39AE4FB /* DashboardWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWidget.swift; sourceTree = "<group>"; };
+		682A70A4724F451D9FF94B8F /* BatteryIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryIndicatorView.swift; sourceTree = "<group>"; };
+		931822DA44B4439AA0061288 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
+		B2A5D308D754437F96F4BBE2 /* CarDashboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarDashboardApp.swift; sourceTree = "<group>"; };
+		5EB0A1E70E8447B58531B621 /* MusicPlayerObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayerObserver.swift; sourceTree = "<group>"; };
+		C2E661FDAD284B33BE054C20 /* MusicWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicWidgetView.swift; sourceTree = "<group>"; };
+		CCA320AC4705414EA7F2CFA2 /* MirroringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirroringView.swift; sourceTree = "<group>"; };
+		4A9FA427FBF1466BB9AD8D00 /* VideoDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDecoder.swift; sourceTree = "<group>"; };
+		64D00B7DD5374B72A1FCE1DB /* SampleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHandler.swift; sourceTree = "<group>"; };
+		698D77C3164D40998E728113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66C119619A0744AB8F34BD52 /* BroadcastExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.cfbundle"; includeInIndex = 0; path = BroadcastExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1826DE8663C430D8E687409 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A142D08C76DE49F1B1E7CC65 /* MultipeerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerConnectionManager.swift; sourceTree = "<group>"; };
+		3C44BB716F0A431BB5F1811F /* DashboardMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardMessage.swift; sourceTree = "<group>"; };
+		6EEB977C97FD454D97B91F43 /* CarDashboardCompanionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarDashboardCompanionApp.swift; sourceTree = "<group>"; };
+		F044C661A6D0484799365FEB /* CompanionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionView.swift; sourceTree = "<group>"; };
+		731CEB8165044E00A4EDC3B1 /* BatteryReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryReporter.swift; sourceTree = "<group>"; };
+		B6D7ED979F5E49FAB037A946 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AFB139272BC64584AFF78284 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1CDA55E75000000000A0001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1CDA55E75000000000A0002 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9DE598DFF86443008E527DCF /* CarDashboardCompanion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDashboardCompanion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		7A2DD09363EA4E75A8323CDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F745077307694067AE3E8E24 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 772FD809927040C9B10F9C0B;
+			remoteInfo = BroadcastExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0D7B845217C3401BBF497800 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D957CA577294F408CB97F65 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01CF0B02D445432E892EB077 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2FD520CC6AC340E0B823537A /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D86F17C8F2A74AE5B1E3C302 /* BroadcastExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXGroup section */
+		0CC54DF8EE3749198C109929 /* CarDashboard */ = {
+			isa = PBXGroup;
+			children = (
+				B2A5D308D754437F96F4BBE2 /* CarDashboardApp.swift */,
+				F1826DE8663C430D8E687409 /* DashboardView.swift */,
+				A1CDA55E75000000000A0001 /* Assets.xcassets */,
+				B6D7ED979F5E49FAB037A946 /* Info.plist */,
+				A64F5B33F4B149BF96505408 /* Layout */,
+				BF93F81813FA481DA004D6CF /* Widgets */,
+			);
+			path = CarDashboard;
+			sourceTree = "<group>";
+		};
+		FE11A5F206C04FF883A29525 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A142D08C76DE49F1B1E7CC65 /* MultipeerConnectionManager.swift */,
+				3C44BB716F0A431BB5F1811F /* DashboardMessage.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		3B5FB2378D594EEDA2847161 /* CarDashboardCompanion */ = {
+			isa = PBXGroup;
+			children = (
+				6EEB977C97FD454D97B91F43 /* CarDashboardCompanionApp.swift */,
+				F044C661A6D0484799365FEB /* CompanionView.swift */,
+				731CEB8165044E00A4EDC3B1 /* BatteryReporter.swift */,
+				A1CDA55E75000000000A0002 /* Assets.xcassets */,
+				AFB139272BC64584AFF78284 /* Info.plist */,
+			);
+			path = CarDashboardCompanion;
+			sourceTree = "<group>";
+		};
+		A7BACD95C6C44570A9C6C0C4 /* BroadcastExtension */ = {
+			isa = PBXGroup;
+			children = (
+				64D00B7DD5374B72A1FCE1DB /* SampleHandler.swift */,
+				698D77C3164D40998E728113 /* Info.plist */,
+			);
+			path = BroadcastExtension;
+			sourceTree = "<group>";
+		};
+		5887D4CF8FD34D6587C63633 = {
+			isa = PBXGroup;
+			children = (
+				0CC54DF8EE3749198C109929 /* CarDashboard */,
+				3B5FB2378D594EEDA2847161 /* CarDashboardCompanion */,
+				A7BACD95C6C44570A9C6C0C4 /* BroadcastExtension */,
+				FE11A5F206C04FF883A29525 /* Shared */,
+				DCC861CF0FD6439C9AA830DF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A64F5B33F4B149BF96505408 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				931822DA44B4439AA0061288 /* DashboardLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		BF93F81813FA481DA004D6CF /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				614922D4BC0D45E7A39AE4FB /* DashboardWidget.swift */,
+				CCA320AC4705414EA7F2CFA2 /* MirroringView.swift */,
+				4A9FA427FBF1466BB9AD8D00 /* VideoDecoder.swift */,
+				C2E661FDAD284B33BE054C20 /* MusicWidgetView.swift */,
+				5EB0A1E70E8447B58531B621 /* MusicPlayerObserver.swift */,
+				0CE98A8C3A424E0BB67E0D5B /* WeatherWidgetView.swift */,
+				A978FC15288F484C8ECCFD1D /* WeatherObserver.swift */,
+				24E4EB6CCDB7451FAB537618 /* ContactsWidgetView.swift */,
+				C98E32F1E48E40D0AD3EA001 /* FavoriteContactsStore.swift */,
+				682A70A4724F451D9FF94B8F /* BatteryIndicatorView.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		DCC861CF0FD6439C9AA830DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				25B2878C7FA14B08B75D8828 /* CarDashboard.app */,
+				9DE598DFF86443008E527DCF /* CarDashboardCompanion.app */,
+				66C119619A0744AB8F34BD52 /* BroadcastExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D628D32AA90B44B0A83AA2A0 /* CarDashboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED4A92F6FA1C45F993C151A1 /* Build configuration list for PBXNativeTarget "CarDashboard" */;
+			buildPhases = (
+				2514911814DB44ACA806F2FC /* Sources */,
+				0D7B845217C3401BBF497800 /* Frameworks */,
+				9A095F2F73504B12839A461A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CarDashboard;
+			productName = CarDashboard;
+			productReference = 25B2878C7FA14B08B75D8828 /* CarDashboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		040CEEC8C01146638E90D978 /* CarDashboardCompanion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA083A8A31094C75ABCFF3D4 /* Build configuration list for PBXNativeTarget "CarDashboardCompanion" */;
+			buildPhases = (
+				8CF08BB262544AED881E7755 /* Sources */,
+				0D957CA577294F408CB97F65 /* Frameworks */,
+				BC0C61BE092A4B0E82657A19 /* Resources */,
+				2FD520CC6AC340E0B823537A /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0180B10CAA374062870579F6 /* PBXTargetDependency */,
+			);
+			name = CarDashboardCompanion;
+			productName = CarDashboardCompanion;
+			productReference = 9DE598DFF86443008E527DCF /* CarDashboardCompanion.app */;
+			productType = "com.apple.product-type.application";
+		};
+		772FD809927040C9B10F9C0B /* BroadcastExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 56442756B4554968942C9BD9 /* Build configuration list for PBXNativeTarget "BroadcastExtension" */;
+			buildPhases = (
+				5DE09EAFD1254266A1D71C92 /* Sources */,
+				01CF0B02D445432E892EB077 /* Frameworks */,
+				A367FBAC79E14EDFA5337308 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BroadcastExtension;
+			productName = BroadcastExtension;
+			productReference = 66C119619A0744AB8F34BD52 /* BroadcastExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		0180B10CAA374062870579F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 772FD809927040C9B10F9C0B /* BroadcastExtension */;
+			targetProxy = 7A2DD09363EA4E75A8323CDD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXProject section */
+		F745077307694067AE3E8E24 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					D628D32AA90B44B0A83AA2A0 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					040CEEC8C01146638E90D978 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					772FD809927040C9B10F9C0B = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = 671F91A5ACAE4A25B0CABC7B /* Build configuration list for PBXProject "CarDashboard" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5887D4CF8FD34D6587C63633;
+			productRefGroup = DCC861CF0FD6439C9AA830DF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D628D32AA90B44B0A83AA2A0 /* CarDashboard */,
+				040CEEC8C01146638E90D978 /* CarDashboardCompanion */,
+				772FD809927040C9B10F9C0B /* BroadcastExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9A095F2F73504B12839A461A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1CDA55E75000000000B0001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC0C61BE092A4B0E82657A19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1CDA55E75000000000B0002 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A367FBAC79E14EDFA5337308 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2514911814DB44ACA806F2FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D89DA12F4EBA499B9A212FDB /* CarDashboardApp.swift in Sources */,
+				CA44510560134642ABA67085 /* DashboardView.swift in Sources */,
+				F24A014D392B4965BC882E66 /* DashboardLayout.swift in Sources */,
+				D19EA0B03D524EAA8DF5954B /* DashboardWidget.swift in Sources */,
+				C8BD092B219445D6B6FDD6C2 /* MirroringView.swift in Sources */,
+				56FBFEAABE8A40B09978C082 /* VideoDecoder.swift in Sources */,
+				2EF05AC9EE444D3E9BDF78D4 /* MusicWidgetView.swift in Sources */,
+				36644FE92F95411F9A9AAD42 /* MusicPlayerObserver.swift in Sources */,
+				57774F0E4E3F4878B8E62C85 /* WeatherWidgetView.swift in Sources */,
+				E51CAC0954E3401A9D5FF771 /* WeatherObserver.swift in Sources */,
+				2223F16F17634B348D1D63EF /* ContactsWidgetView.swift in Sources */,
+				8A06CA5246ED46EAB4AF4B82 /* FavoriteContactsStore.swift in Sources */,
+				EFAD586A52F94441B53CB3DD /* BatteryIndicatorView.swift in Sources */,
+				06943D4CB709448AAA2B8048 /* MultipeerConnectionManager.swift in Sources */,
+				AD24271F07194644A2E3FCC2 /* DashboardMessage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8CF08BB262544AED881E7755 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A29C8F34F5824E068F229DA0 /* CarDashboardCompanionApp.swift in Sources */,
+				53837A280EA945BBA68827D2 /* CompanionView.swift in Sources */,
+				A1033A71062B4BD889556540 /* BatteryReporter.swift in Sources */,
+				40F48CEF823D47578BCBF588 /* MultipeerConnectionManager.swift in Sources */,
+				2F6AC2692123444895C2DED9 /* DashboardMessage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE09EAFD1254266A1D71C92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AADFA096AD3847BEB9264568 /* SampleHandler.swift in Sources */,
+				A04719B140FB44EFA1EC5D2E /* MultipeerConnectionManager.swift in Sources */,
+				EEA32EB5EC3C4C2A8B923A75 /* DashboardMessage.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		64D58950A06448B9B13DC110 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CarDashboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		6BD493D32DE045ECB039FB2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CEDD2285E3D84CD5BD6E373A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FBCDAA26BD7547C5A494A56F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CarDashboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		C3FBB1E9D2D348AD8516CC78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CarDashboardCompanion/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboardCompanion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		0B28FBA3F09C44EDBA8A7138 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				ENABLE_PREVIEWS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CarDashboardCompanion/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboardCompanion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		53D66BE5BDF74E51BD3D46F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				INFOPLIST_FILE = BroadcastExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboardCompanion.BroadcastExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B5629B8159554155BF1F2C78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 89WD5X7Y3A;
+				INFOPLIST_FILE = BroadcastExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clementbalcon.CarDashboardCompanion.BroadcastExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		671F91A5ACAE4A25B0CABC7B /* Build configuration list for PBXProject "CarDashboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEDD2285E3D84CD5BD6E373A /* Debug */,
+				6BD493D32DE045ECB039FB2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ED4A92F6FA1C45F993C151A1 /* Build configuration list for PBXNativeTarget "CarDashboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBCDAA26BD7547C5A494A56F /* Debug */,
+				64D58950A06448B9B13DC110 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA083A8A31094C75ABCFF3D4 /* Build configuration list for PBXNativeTarget "CarDashboardCompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3FBB1E9D2D348AD8516CC78 /* Debug */,
+				0B28FBA3F09C44EDBA8A7138 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		56442756B4554968942C9BD9 /* Build configuration list for PBXNativeTarget "BroadcastExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53D66BE5BDF74E51BD3D46F6 /* Debug */,
+				B5629B8159554155BF1F2C78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F745077307694067AE3E8E24 /* Project object */;
+}
